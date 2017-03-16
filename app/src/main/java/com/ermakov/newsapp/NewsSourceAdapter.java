@@ -20,10 +20,28 @@ import butterknife.ButterKnife;
  */
 public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.ViewHolder> {
 
-    List<NewsSource> mNewsSources;
+    private List<NewsSource> mNewsSources;
 
-    public NewsSourceAdapter(List<NewsSource> newsSources) {
+    /**
+     * Интерфейс, который определяет методы для обработки нажатий на элементы.
+     */
+    public interface OnClickHandler {
+        /**
+         * Обработка нажатия на элемент списка.
+         * @param newsSource данные источника новостей.
+         */
+        void onItemClick(NewsSource newsSource);
+    }
+    private final OnClickHandler mOnClickHandler;
+
+    /**
+     * Конструктор.
+     * @param newsSources массив с источниками новостей.
+     * @param clickHandler обработчик нажатий на элементы списка.
+     */
+    public NewsSourceAdapter(List<NewsSource> newsSources, OnClickHandler clickHandler) {
         mNewsSources = newsSources;
+        mOnClickHandler = clickHandler;
     }
 
     @Override
@@ -48,7 +66,7 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Vi
         return (mNewsSources != null) ? mNewsSources.size() : 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_name) TextView mNameTextView;
         @BindView(R.id.tv_description) TextView mDescriptionTextView;
@@ -57,6 +75,13 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Vi
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnClickHandler != null)
+                mOnClickHandler.onItemClick(mNewsSources.get(getAdapterPosition()));
         }
     }
 }

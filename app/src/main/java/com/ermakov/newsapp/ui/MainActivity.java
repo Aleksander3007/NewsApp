@@ -4,10 +4,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.ermakov.newsapp.NewsSource;
 import com.ermakov.newsapp.R;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.view_pager) ViewPager mNewsViewPager;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
 
+    private NewsViewPagerAdapter mNewsViewPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,18 +40,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        NewsViewPagerAdapter adapter = new NewsViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_GENERAL), "General");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_BUSINESS), "Business");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SPORT), "Sport");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SCIENCE_AND_NATURE), "Science");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_TECHNOLOGY), "Technology");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_ENTERTAINMENT), "Entertainment");
-        adapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_MUSIC), "Music");
-        mNewsViewPager.setAdapter(adapter);
+        mNewsViewPagerAdapter = new NewsViewPagerAdapter(getSupportFragmentManager());
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_GENERAL), "General");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_BUSINESS), "Business");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SPORT), "Sport");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SCIENCE_AND_NATURE), "Science");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_TECHNOLOGY), "Technology");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_ENTERTAINMENT), "Entertainment");
+        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_MUSIC), "Music");
+        mNewsViewPager.setAdapter(mNewsViewPagerAdapter);
     }
 
-    class NewsViewPagerAdapter extends FragmentPagerAdapter {
+    class NewsViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -70,9 +74,19 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
 
+        @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
+        }
+
         public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+        }
+
+        public void replaceFragment(int fragmentPosition, Fragment newFragment) {
+            mFragmentList.set(fragmentPosition, newFragment);
+            notifyDataSetChanged();
         }
     }
 }
