@@ -70,7 +70,7 @@ public class NewsCategoryFragment extends Fragment {
         NewsSourceAdapter newsSourceAdapter = new NewsSourceAdapter(mNewsSources);
 
         mNewsSourceRecyclerView.setLayoutManager(
-                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                new LinearLayoutManager(getContext()));
         mNewsSourceRecyclerView.setAdapter(newsSourceAdapter);
 
         return view;
