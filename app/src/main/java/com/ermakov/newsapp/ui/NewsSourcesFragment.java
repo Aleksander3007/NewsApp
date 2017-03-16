@@ -4,19 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.ermakov.newsapp.NewsApiFactory;
-import com.ermakov.newsapp.NewsApiService;
 import com.ermakov.newsapp.NewsSource;
 import com.ermakov.newsapp.NewsSourceAdapter;
-import com.ermakov.newsapp.NewsSourceResponse;
+import com.ermakov.newsapp.NewsSourcesLoader;
 import com.ermakov.newsapp.R;
 
 import java.util.ArrayList;
@@ -25,16 +25,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Фрагмент для отображения источников новостей одной из категорий.
  */
-public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.OnClickHandler {
+public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.OnClickHandler,
+        LoaderManager.LoaderCallbacks<List<NewsSource>> {
+
+    public static final String TAG = NewsSourcesFragment.class.getSimpleName();
 
     public static final String ARG_CATEGORY = "ARG_CATEGORY";
+    private static final int NEWS_SOURCE_LOADER = 1;
 
     @BindView(R.id.rv_news_source) RecyclerView mNewsSourceRecyclerView;
     @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
@@ -42,9 +43,11 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     private Unbinder mUnbinder;
 
     private List<NewsSource> mNewsSources = new ArrayList<>();
-    private String category;
+    private String mCategory;
 
     public static NewsSourcesFragment newInstance(String category) {
+
+        Log.d(TAG, "newInstance(): " + category);
 
         NewsSourcesFragment fragment = new NewsSourcesFragment();
 
@@ -61,8 +64,14 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
         View view = inflater.inflate(R.layout.fragment_news_sources, container, false);
         mUnbinder = ButterKnife.bind(this, view);
 
-        NewsSourceAdapter newsSourceAdapter = new NewsSourceAdapter(mNewsSources, this);
+        mCategory = getArguments().getString(ARG_CATEGORY);
+        if (mCategory == null)
+            throw new IllegalArgumentException("Необходимо задать параметр mCategory. " +
+                    "Используй для создания NewsSourcesFragment его статический метод newInstance()");
 
+        Log.d(TAG, "onCreateView(): " + mCategory);
+
+        NewsSourceAdapter newsSourceAdapter = new NewsSourceAdapter(mNewsSources, this);
         mNewsSourceRecyclerView.setLayoutManager(
                 new LinearLayoutManager(getContext()));
         mNewsSourceRecyclerView.setAdapter(newsSourceAdapter);
@@ -80,32 +89,8 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
-
-        // TODO: Переделать на Loader.
-        NewsApiService newsApiService = NewsApiFactory.createNewsApiService();
-        newsApiService.getNewsSource(category, NewsSource.LANGUAGE_ENGLISH)
-                .enqueue(new Callback<NewsSourceResponse>() {
-                    @Override
-                    public void onResponse(Call<NewsSourceResponse> call, Response<NewsSourceResponse> response) {
-                        if (response.isSuccessful()) {
-                            mNewsSources.clear();
-                            mNewsSources.addAll(response.body().getSources());
-                            mNewsSourceRecyclerView.getAdapter().notifyDataSetChanged();
-                        }
-                        else {
-                            Toast.makeText(getActivity(), "Fail", Toast.LENGTH_SHORT).show();
-                        }
-                        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onFailure(Call<NewsSourceResponse> call, Throwable t) {
-                        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
-                        t.printStackTrace();
-                        Toast.makeText(getActivity(), "onFailure()", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        getLoaderManager().restartLoader(NEWS_SOURCE_LOADER, null, this);
+        Log.d(TAG, "onViewCreated(): " + mCategory);
     }
 
     @Override
@@ -115,8 +100,34 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .replace(R.id.fragment_root, new NewsArticlesFragment())
-                //        .hide(this)
-                //        .add(new NewsArticlesFragment(), "art")
                 .commit();
+    }
+
+    @Override
+    public Loader<List<NewsSource>> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case NEWS_SOURCE_LOADER:
+                mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
+                Log.d("MyTag", "onCreateLoader(): " + mCategory);
+                return new NewsSourcesLoader(getActivity(), mCategory, NewsSource.LANGUAGE_ENGLISH);
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<NewsSource>> loader, List<NewsSource> data) {
+        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
+        if (data != null) {
+            mNewsSources.clear();
+            mNewsSources.addAll(data);
+            mNewsSourceRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+        Log.d(TAG, "onLoadFinished(): " + mCategory);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<NewsSource>> loader) {
+
     }
 }
