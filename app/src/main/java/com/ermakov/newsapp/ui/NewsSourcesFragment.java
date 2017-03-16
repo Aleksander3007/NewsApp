@@ -95,11 +95,12 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
 
     @Override
     public void onItemClick(NewsSource newsSource) {
+        NewsArticlesFragment newsArticlesFragment =
+                NewsArticlesFragment.newInstance(newsSource.getId());
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_root, newsArticlesFragment)
                 .addToBackStack(null)
-                .replace(R.id.fragment_root, new NewsArticlesFragment())
                 .commit();
     }
 

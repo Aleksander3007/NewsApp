@@ -37,6 +37,26 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mNewsViewPager);
     }
 
+    @Override
+    public void onBackPressed() {
+        // Issue: https://code.google.com/p/android/issues/detail?id=40323
+        // Решение: http://stackoverflow.com/questions/13418436/android-4-2-back-stack-behaviour-with-nested-fragments
+
+        // Если фрагмент видимый и backstack этого фрагмента не пустой,
+        // то эмулирует поведение onBackPressed(), потому что, по умолчанию не работает для вложенных фрагментов.
+        FragmentManager fm = getSupportFragmentManager();
+        for (Fragment frag : fm.getFragments()) {
+            if (frag.isVisible()) {
+                FragmentManager childFm = frag.getChildFragmentManager();
+                if (childFm.getBackStackEntryCount() > 0) {
+                    childFm.popBackStack();
+                    return;
+                }
+            }
+        }
+        super.onBackPressed();
+    }
+
     private void setupViewPager() {
         mNewsViewPagerAdapter = new NewsViewPagerAdapter(getSupportFragmentManager());
         mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_GENERAL), "General");
