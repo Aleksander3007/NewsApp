@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // то эмулирует поведение onBackPressed(), потому что, по умолчанию не работает для вложенных фрагментов.
         FragmentManager fm = getSupportFragmentManager();
         for (Fragment frag : fm.getFragments()) {
-            if (frag.isVisible()) {
+            if (frag != null && frag.isVisible()) {
                 FragmentManager childFm = frag.getChildFragmentManager();
                 if (childFm.getBackStackEntryCount() > 0) {
                     childFm.popBackStack();
