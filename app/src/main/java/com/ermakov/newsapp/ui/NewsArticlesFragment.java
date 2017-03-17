@@ -3,6 +3,8 @@ package com.ermakov.newsapp.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.ermakov.newsapp.NewsApiFactory;
-import com.ermakov.newsapp.NewsApiService;
 import com.ermakov.newsapp.NewsArticle;
 import com.ermakov.newsapp.NewsArticleAdapter;
-import com.ermakov.newsapp.NewsArticleResponse;
+import com.ermakov.newsapp.NewsArticlesLoader;
 import com.ermakov.newsapp.R;
 
 import java.util.ArrayList;
@@ -24,18 +24,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Фрагмент для отображения новостей одной из категорий определенного источника новостей.
  */
-public class NewsArticlesFragment extends Fragment {
+public class NewsArticlesFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<List<NewsArticle>> {
 
     public static final String TAG = NewsArticlesFragment.class.getSimpleName();
 
     public static final String ARG_SOURCE = "ARG_SOURCE";
+    private static final int NEWS_ARTICLE_LOADER = 1;
 
     @BindView(R.id.rv_news_articles) RecyclerView mNewsArticleRecyclerView;
     @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
@@ -84,36 +83,41 @@ public class NewsArticlesFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getLoaderManager().restartLoader(NEWS_ARTICLE_LOADER, null, this);
+
         Log.d(TAG, "onViewCreated()");
-        mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
-
-        NewsApiService newsApiService = NewsApiFactory.createNewsApiService();
-        newsApiService.getNewsArticle(mSource).enqueue(new Callback<NewsArticleResponse>() {
-            @Override
-            public void onResponse(Call<NewsArticleResponse> call, Response<NewsArticleResponse> response) {
-                if (response.isSuccessful()) {
-                    mNewsArticles.clear();
-                    mNewsArticles.addAll(response.body().getArticles());
-                    mNewsArticleRecyclerView.getAdapter().notifyDataSetChanged();
-                }
-                else {
-                    Log.d(TAG, "Fail: " + response.code());
-                }
-
-                mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<NewsArticleResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure()");
-                mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
-            }
-        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+    }
+
+    @Override
+    public Loader<List<NewsArticle>> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case NEWS_ARTICLE_LOADER:
+                Log.d(TAG, "onViewCreated(): " + mSource);
+                mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
+                return new NewsArticlesLoader(getActivity(), mSource);
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<NewsArticle>> loader, List<NewsArticle> data) {
+        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
+        if (data != null) {
+            mNewsArticles.clear();
+            mNewsArticles.addAll(data);
+            mNewsArticleRecyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<NewsArticle>> loader) {
+
     }
 }
