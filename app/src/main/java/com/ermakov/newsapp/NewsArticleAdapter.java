@@ -4,7 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -32,8 +36,13 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<NewsArticleAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         NewsArticle newsArticle = mNewsArticles.get(position);
-        holder.mAuthorTextView.setText("author: " + newsArticle.getAuthor());
-        holder.mDescriptionTextView.setText("descr: " + newsArticle.getDescription());
+        holder.mTitleTextView.setText(newsArticle.getTitle());
+        holder.mDescriptionTextView.setText(newsArticle.getDescription());
+        Picasso.with(holder.itemView.getContext())
+                .load(newsArticle.getUrlToImage())
+                .fit()
+                .centerInside()
+                .into(holder.mImageView);
     }
 
     @Override
@@ -43,8 +52,9 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<NewsArticleAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_author) TextView mAuthorTextView;
+        @BindView(R.id.tv_title) TextView mTitleTextView;
         @BindView(R.id.tv_description) TextView mDescriptionTextView;
+        @BindView(R.id.image_view) ImageView mImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

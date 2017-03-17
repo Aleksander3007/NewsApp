@@ -6,4 +6,7 @@
     <dimen name="card_view_margin">4dp</dimen>
     <dimen name="logo_news_source_size">80dp</dimen>
     <dimen name="logo_news_source_right_margin">8dp</dimen>
+    <dimen name="img_news_article_width">80dp</dimen>
+    <dimen name="img_news_article_margin_left">4dp</dimen>
+    <dimen name="title_news_article_margin_bottom">8dp</dimen>
 </resources>

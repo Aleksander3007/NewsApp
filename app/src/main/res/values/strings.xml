@@ -2,5 +2,8 @@
     <string name="app_name">NewsApp</string>
     <string name="stuff_news_source_title">News Source Title</string>
     <string name="stuff_news_source_description">News Source Description</string>
+    <string name="stuff_news_article_title">News Article Title</string>
+    <string name="stuff_news_article_description">News Article Description</string>
     <string name="logo_content_description">News Source Logo</string>
+    <string name="article_image_content_description">News Article Image</string>
 </resources>
