@@ -23,7 +23,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/body_news_article_margin_bottom">
 
             <TextView
                 android:id="@+id/tv_description"
@@ -42,6 +43,13 @@
                 android:layout_marginLeft="@dimen/img_news_article_margin_left"/>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_published_date"
+            android:text="@string/stuff_news_article_date"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

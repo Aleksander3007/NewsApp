@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
  * Статья.
  */
 public class NewsArticle {
+
+    public static final String FORMAT_PUBLISHED_AT = "yyyy-MM-dd'T'hh:mm:ss'Z'";
+    public static final String TIMEZONE_PUBLISHED_AT = "GMT+0";
     @SerializedName("author")
     private String mAuthor;
 
@@ -21,7 +24,6 @@ public class NewsArticle {
     @SerializedName("urlToImage")
     private String mUrlToImage;
 
-    // TODO: Переводить на местную временную зону.
     @SerializedName("publishedAt")
     private String mPublishedAt;
 
