@@ -36,7 +36,6 @@
             <ImageView
                 android:id="@+id/image_view"
                 android:contentDescription="@string/article_image_content_description"
-                android:src="@drawable/tr"
                 android:scaleType="fitStart"
                 android:layout_width="@dimen/img_news_article_width"
                 android:layout_height="match_parent"
