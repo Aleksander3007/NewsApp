@@ -32,7 +32,7 @@ public class NewsSourcesLoader extends AsyncTaskLoader<List<NewsSource>> {
     public List<NewsSource> loadInBackground() {
         NewsApiService newsApiService = NewsApiFactory.createNewsApiService();
         try {
-            Response<NewsSourceResponse> response = newsApiService.getNewsSource(mCategory, mLanguage)
+            Response<NewsSourceResponse> response = newsApiService.getNewsSources(mCategory, mLanguage)
                     .execute();
             return (response.isSuccessful()) ? response.body().getSources() : null;
         } catch (IOException e) {

@@ -28,10 +28,24 @@ import butterknife.ButterKnife;
  */
 public class NewsArticleAdapter extends RecyclerView.Adapter<NewsArticleAdapter.ViewHolder>{
 
+    /**
+     * Интерфейс, который определяет методы для обработки нажатий на элементы.
+     */
+    public interface OnArticleClickListener {
+        /**
+         * Обработка нажатия на элемент списка.
+         * @param newsArticle новостная статья.
+         */
+        void onArticleClick(NewsArticle newsArticle);
+    }
+    private final NewsArticleAdapter.OnArticleClickListener mArticleClickListener;
+
     private List<NewsArticle> mNewsArticles;
 
-    public NewsArticleAdapter(List<NewsArticle> newsArticles) {
+    public NewsArticleAdapter(List<NewsArticle> newsArticles,
+                              OnArticleClickListener articleClickListener) {
         this.mNewsArticles = newsArticles;
+        this.mArticleClickListener = articleClickListener;
     }
 
     @Override
@@ -63,7 +77,7 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<NewsArticleAdapter.
         return mNewsArticles.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_title) TextView mTitleTextView;
         @BindView(R.id.tv_description) TextView mDescriptionTextView;
@@ -73,6 +87,14 @@ public class NewsArticleAdapter extends RecyclerView.Adapter<NewsArticleAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view)
+        {
+            if (mArticleClickListener != null)
+                mArticleClickListener.onArticleClick(mNewsArticles.get(getAdapterPosition()));
         }
     }
 

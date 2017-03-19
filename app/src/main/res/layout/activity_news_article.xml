@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView  xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/wv_article"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    />
+
+    <ProgressBar
+        android:id="@+id/pb_article_loading"
+        android:visibility="invisible"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

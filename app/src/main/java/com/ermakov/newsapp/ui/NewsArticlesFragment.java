@@ -1,5 +1,6 @@
 package com.ermakov.newsapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,8 @@ import butterknife.Unbinder;
  * Фрагмент для отображения новостей одной из категорий определенного источника новостей.
  */
 public class NewsArticlesFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<List<NewsArticle>> {
+        implements LoaderManager.LoaderCallbacks<List<NewsArticle>>,
+        NewsArticleAdapter.OnArticleClickListener{
 
     public static final String TAG = NewsArticlesFragment.class.getSimpleName();
 
@@ -70,7 +72,7 @@ public class NewsArticlesFragment extends Fragment
             throw new IllegalArgumentException("Необходимо задать параметр mCategory. " +
                     "Используй для создания NewsArticlesFragment его статический метод newInstance()");
 
-        NewsArticleAdapter newsArticleAdapter = new NewsArticleAdapter(mNewsArticles);
+        NewsArticleAdapter newsArticleAdapter = new NewsArticleAdapter(mNewsArticles, this);
         mNewsArticleRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mNewsArticleRecyclerView.setAdapter(newsArticleAdapter);
 
@@ -119,5 +121,13 @@ public class NewsArticlesFragment extends Fragment
     @Override
     public void onLoaderReset(Loader<List<NewsArticle>> loader) {
 
+    }
+
+    @Override
+    public void onArticleClick(NewsArticle newsArticle)
+    {
+        Intent intent = new Intent(getActivity(), NewsArticleActivity.class);
+        intent.putExtra(NewsArticleActivity.EXTRA_ARTICLE_URL, newsArticle.getUrl());
+        startActivity(intent);
     }
 }
