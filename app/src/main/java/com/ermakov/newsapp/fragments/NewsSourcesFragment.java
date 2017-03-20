@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -39,6 +40,7 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
 
     @BindView(R.id.rv_news_source) RecyclerView mNewsSourceRecyclerView;
     @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
+    @BindView(R.id.l_error) View mErrorView;
 
     private Unbinder mUnbinder;
 
@@ -124,11 +126,21 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
             mNewsSources.addAll(data);
             mNewsSourceRecyclerView.getAdapter().notifyDataSetChanged();
         }
+        else {
+            mErrorView.setVisibility(View.VISIBLE);
+        }
         Log.d(TAG, "onLoadFinished(): " + mCategory);
     }
 
     @Override
     public void onLoaderReset(Loader<List<NewsSource>> loader) {
 
+    }
+
+    @OnClick(R.id.btn_connect)
+    public void onConnectClick() {
+        mErrorView.setVisibility(View.INVISIBLE);
+        getLoaderManager().restartLoader(NEWS_SOURCE_LOADER, null, this);
+        Log.d(TAG, "onConnectClick(): " + mCategory);
     }
 }

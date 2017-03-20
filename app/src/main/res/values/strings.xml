@@ -14,4 +14,6 @@
     <string name="title_technology">Technology</string>
     <string name="title_entertainment">Entertainment</string>
     <string name="title_music">Music</string>
+    <string name="error_network_connection">Not connect. Verify Network.</string>
+    <string name="btn_retry_network_connect">Retry</string>
 </resources>

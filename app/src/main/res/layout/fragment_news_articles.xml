@@ -21,4 +21,6 @@
         android:layout_height="42dp"
         android:layout_gravity="center"/>
 
+    <include layout="@layout/error_network"/>
+
 </FrameLayout>

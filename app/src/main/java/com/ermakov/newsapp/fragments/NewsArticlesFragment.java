@@ -25,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -41,6 +42,7 @@ public class NewsArticlesFragment extends Fragment
 
     @BindView(R.id.rv_news_articles) RecyclerView mNewsArticleRecyclerView;
     @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
+    @BindView(R.id.l_error) View mErrorView;
 
     private Unbinder mUnbinder;
 
@@ -101,7 +103,7 @@ public class NewsArticlesFragment extends Fragment
     public Loader<List<NewsArticle>> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case NEWS_ARTICLE_LOADER:
-                Log.d(TAG, "onViewCreated(): " + mSource);
+                Log.d(TAG, "onCreateLoader(): " + mSource);
                 mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
                 return new NewsArticlesLoader(getActivity(), mSource);
             default:
@@ -117,6 +119,10 @@ public class NewsArticlesFragment extends Fragment
             mNewsArticles.addAll(data);
             mNewsArticleRecyclerView.getAdapter().notifyDataSetChanged();
         }
+        else {
+            mErrorView.setVisibility(View.VISIBLE);
+        }
+        Log.d(TAG, "onLoadFinished(): " + mSource);
     }
 
     @Override
@@ -130,5 +136,12 @@ public class NewsArticlesFragment extends Fragment
         Intent intent = new Intent(getActivity(), NewsArticleActivity.class);
         intent.putExtra(NewsArticleActivity.EXTRA_ARTICLE_URL, newsArticle.getUrl());
         startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_connect)
+    public void onConnectClick() {
+        mErrorView.setVisibility(View.INVISIBLE);
+        getLoaderManager().restartLoader(NEWS_ARTICLE_LOADER, null, this);
+        Log.d(TAG, "onConnectClick(): " + mSource);
     }
 }
