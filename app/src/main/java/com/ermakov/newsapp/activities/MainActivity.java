@@ -1,4 +1,4 @@
-package com.ermakov.newsapp.ui;
+package com.ermakov.newsapp.activities;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,8 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.ermakov.newsapp.NewsSource;
+import com.ermakov.newsapp.models.NewsSource;
 import com.ermakov.newsapp.R;
+import com.ermakov.newsapp.fragments.NewsCategoryFragment;
 
 import java.util.ArrayList;
 import java.util.List;

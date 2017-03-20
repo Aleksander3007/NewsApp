@@ -1,4 +1,4 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,15 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
+import com.ermakov.newsapp.R;
+import com.ermakov.newsapp.models.NewsArticle;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.text.FieldPosition;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;

@@ -1,6 +1,5 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ermakov.newsapp.R;
+import com.ermakov.newsapp.models.NewsSource;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

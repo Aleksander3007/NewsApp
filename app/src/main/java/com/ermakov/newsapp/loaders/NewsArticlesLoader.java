@@ -1,7 +1,12 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.loaders;
 
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
+
+import com.ermakov.newsapp.models.NewsArticle;
+import com.ermakov.newsapp.net.NewsApiFactory;
+import com.ermakov.newsapp.net.NewsApiService;
+import com.ermakov.newsapp.net.NewsArticleResponse;
 
 import java.io.IOException;
 import java.util.List;

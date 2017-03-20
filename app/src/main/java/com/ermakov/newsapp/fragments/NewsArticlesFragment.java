@@ -1,4 +1,4 @@
-package com.ermakov.newsapp.ui;
+package com.ermakov.newsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.ermakov.newsapp.NewsArticle;
-import com.ermakov.newsapp.NewsArticleAdapter;
-import com.ermakov.newsapp.NewsArticlesLoader;
+import com.ermakov.newsapp.models.NewsArticle;
+import com.ermakov.newsapp.adapters.NewsArticleAdapter;
+import com.ermakov.newsapp.loaders.NewsArticlesLoader;
 import com.ermakov.newsapp.R;
+import com.ermakov.newsapp.activities.NewsArticleActivity;
 
 import java.util.ArrayList;
 import java.util.List;

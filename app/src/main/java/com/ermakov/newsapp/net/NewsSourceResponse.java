@@ -1,5 +1,6 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.net;
 
+import com.ermakov.newsapp.models.NewsSource;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.net;
 
 
 import android.support.annotation.NonNull;
@@ -14,8 +14,6 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.R.attr.category;
 
 /**
  * Класс отвечает за работу с объектами для News API.

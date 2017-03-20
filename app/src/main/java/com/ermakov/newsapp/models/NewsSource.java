@@ -1,4 +1,4 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.models;
 
 import com.google.gson.annotations.SerializedName;
 

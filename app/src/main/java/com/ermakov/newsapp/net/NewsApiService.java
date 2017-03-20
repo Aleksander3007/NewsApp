@@ -1,12 +1,8 @@
-package com.ermakov.newsapp;
+package com.ermakov.newsapp.net;
 
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 /**
  * Интерфейс, объявляющий методы для работы с News API.

@@ -1,4 +1,4 @@
-package com.ermakov.newsapp.ui;
+package com.ermakov.newsapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ermakov.newsapp.NewsSource;
+import com.ermakov.newsapp.models.NewsSource;
 import com.ermakov.newsapp.R;
 
 import java.util.ArrayList;

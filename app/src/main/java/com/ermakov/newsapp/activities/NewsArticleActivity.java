@@ -1,4 +1,4 @@
-package com.ermakov.newsapp.ui;
+package com.ermakov.newsapp.activities;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
