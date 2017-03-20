@@ -7,4 +7,11 @@
     <string name="stuff_news_article_date">22 октября, 20:08</string>
     <string name="logo_content_description">News Source Logo</string>
     <string name="article_image_content_description">News Article Image</string>
+    <string name="title_general">General</string>
+    <string name="title_business">Business</string>
+    <string name="title_sport">Sport</string>
+    <string name="title_science">Science</string>
+    <string name="title_technology">Technology</string>
+    <string name="title_entertainment">Entertainment</string>
+    <string name="title_music">Music</string>
 </resources>

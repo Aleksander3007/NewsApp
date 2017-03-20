@@ -16,6 +16,7 @@ import com.ermakov.newsapp.fragments.NewsCategoryFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -24,6 +25,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.view_pager) ViewPager mNewsViewPager;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
+
+    @BindString(R.string.title_general) String mTitleGeneral;
+    @BindString(R.string.title_business) String mTitleBusiness;
+    @BindString(R.string.title_sport) String mTitleSport;
+    @BindString(R.string.title_science) String mTitleScience;
+    @BindString(R.string.title_technology) String mTitleTechnology;
+    @BindString(R.string.title_entertainment) String mTitleEntertainment;
+    @BindString(R.string.title_music) String mTitleMusic;
 
     private NewsViewPagerAdapter mNewsViewPagerAdapter;
 
@@ -60,13 +69,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         mNewsViewPagerAdapter = new NewsViewPagerAdapter(getSupportFragmentManager());
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_GENERAL), "General");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_BUSINESS), "Business");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SPORT), "Sport");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SCIENCE_AND_NATURE), "Science");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_TECHNOLOGY), "Technology");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_ENTERTAINMENT), "Entertainment");
-        mNewsViewPagerAdapter.addFragment(NewsCategoryFragment.newInstance(NewsSource.CATEGORY_MUSIC), "Music");
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_GENERAL), mTitleGeneral);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_BUSINESS), mTitleBusiness);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SPORT), mTitleSport);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_SCIENCE_AND_NATURE), mTitleScience);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_TECHNOLOGY), mTitleTechnology);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_ENTERTAINMENT), mTitleEntertainment);
+        mNewsViewPagerAdapter.addFragment(
+                NewsCategoryFragment.newInstance(NewsSource.CATEGORY_MUSIC), mTitleMusic);
         mNewsViewPager.setAdapter(mNewsViewPagerAdapter);
     }
 
