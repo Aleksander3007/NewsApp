@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +34,7 @@ import butterknife.Unbinder;
  */
 public class NewsArticlesFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<List<NewsArticle>>,
-        NewsArticleAdapter.OnArticleClickListener{
+        NewsArticleAdapter.OnArticleClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = NewsArticlesFragment.class.getSimpleName();
 
@@ -41,7 +42,7 @@ public class NewsArticlesFragment extends Fragment
     private static final int NEWS_ARTICLE_LOADER = 1;
 
     @BindView(R.id.rv_news_articles) RecyclerView mNewsArticleRecyclerView;
-    @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
+    @BindView(R.id.srl_news_articles) SwipeRefreshLayout mNewsArticlesSwipeRefreshLayout;
     @BindView(R.id.l_error) View mErrorView;
 
     private Unbinder mUnbinder;
@@ -79,6 +80,9 @@ public class NewsArticlesFragment extends Fragment
         mNewsArticleRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mNewsArticleRecyclerView.setAdapter(newsArticleAdapter);
 
+        mNewsArticlesSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mNewsArticlesSwipeRefreshLayout.setOnRefreshListener(this);
+
         Log.d(TAG, "onCreateView()");
 
         return view;
@@ -104,7 +108,6 @@ public class NewsArticlesFragment extends Fragment
         switch (id) {
             case NEWS_ARTICLE_LOADER:
                 Log.d(TAG, "onCreateLoader(): " + mSource);
-                mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
                 return new NewsArticlesLoader(getActivity(), mSource);
             default:
                 return null;
@@ -113,13 +116,15 @@ public class NewsArticlesFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<List<NewsArticle>> loader, List<NewsArticle> data) {
-        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
+        mNewsArticlesSwipeRefreshLayout.setRefreshing(false);
         if (data != null) {
             mNewsArticles.clear();
             mNewsArticles.addAll(data);
             mNewsArticleRecyclerView.getAdapter().notifyDataSetChanged();
         }
         else {
+            mNewsArticles.clear();
+            mNewsArticleRecyclerView.getAdapter().notifyDataSetChanged();
             mErrorView.setVisibility(View.VISIBLE);
         }
         Log.d(TAG, "onLoadFinished(): " + mSource);
@@ -139,9 +144,20 @@ public class NewsArticlesFragment extends Fragment
     }
 
     @OnClick(R.id.btn_connect)
-    public void onConnectClick() {
-        mErrorView.setVisibility(View.INVISIBLE);
-        getLoaderManager().restartLoader(NEWS_ARTICLE_LOADER, null, this);
+    public void onRetryLoadDataClick() {
+        loadData();
         Log.d(TAG, "onConnectClick(): " + mSource);
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "Refresh is started: " + mSource);
+        loadData();
+    }
+
+    private void loadData() {
+        mNewsArticlesSwipeRefreshLayout.setRefreshing(true);
+        mErrorView.setVisibility(View.INVISIBLE);
+        getLoaderManager().restartLoader(NEWS_ARTICLE_LOADER, null, NewsArticlesFragment.this);
     }
 }

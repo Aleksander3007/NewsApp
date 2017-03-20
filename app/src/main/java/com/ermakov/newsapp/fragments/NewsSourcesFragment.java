@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,7 +32,7 @@ import butterknife.Unbinder;
  * Фрагмент для отображения источников новостей одной из категорий.
  */
 public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.OnClickHandler,
-        LoaderManager.LoaderCallbacks<List<NewsSource>> {
+        LoaderManager.LoaderCallbacks<List<NewsSource>>, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String TAG = NewsSourcesFragment.class.getSimpleName();
 
@@ -39,7 +40,7 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     private static final int NEWS_SOURCE_LOADER = 1;
 
     @BindView(R.id.rv_news_source) RecyclerView mNewsSourceRecyclerView;
-    @BindView(R.id.pb_news_loading) ProgressBar mNewsLoadingProgressBar;
+    @BindView(R.id.srl_news_sources) SwipeRefreshLayout mNewsSourcesSwipeRefreshLayout;
     @BindView(R.id.l_error) View mErrorView;
 
     private Unbinder mUnbinder;
@@ -78,6 +79,9 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
                 new LinearLayoutManager(getContext()));
         mNewsSourceRecyclerView.setAdapter(newsSourceAdapter);
 
+        mNewsSourcesSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        mNewsSourcesSwipeRefreshLayout.setOnRefreshListener(this);
+
         return view;
     }
 
@@ -90,9 +94,8 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getLoaderManager().restartLoader(NEWS_SOURCE_LOADER, null, this);
         Log.d(TAG, "onViewCreated(): " + mCategory);
+        loadData();
     }
 
     @Override
@@ -110,7 +113,6 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     public Loader<List<NewsSource>> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case NEWS_SOURCE_LOADER:
-                mNewsLoadingProgressBar.setVisibility(View.VISIBLE);
                 Log.d("MyTag", "onCreateLoader(): " + mCategory);
                 return new NewsSourcesLoader(getActivity(), mCategory, NewsSource.LANGUAGE_ENGLISH);
             default:
@@ -120,13 +122,15 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
 
     @Override
     public void onLoadFinished(Loader<List<NewsSource>> loader, List<NewsSource> data) {
-        mNewsLoadingProgressBar.setVisibility(View.INVISIBLE);
+        mNewsSourcesSwipeRefreshLayout.setRefreshing(false);
         if (data != null) {
             mNewsSources.clear();
             mNewsSources.addAll(data);
             mNewsSourceRecyclerView.getAdapter().notifyDataSetChanged();
         }
         else {
+            mNewsSources.clear();
+            mNewsSourceRecyclerView.getAdapter().notifyDataSetChanged();
             mErrorView.setVisibility(View.VISIBLE);
         }
         Log.d(TAG, "onLoadFinished(): " + mCategory);
@@ -138,9 +142,20 @@ public class NewsSourcesFragment extends Fragment implements NewsSourceAdapter.O
     }
 
     @OnClick(R.id.btn_connect)
-    public void onConnectClick() {
-        mErrorView.setVisibility(View.INVISIBLE);
-        getLoaderManager().restartLoader(NEWS_SOURCE_LOADER, null, this);
+    public void onRetryLoadDataClick() {
+        loadData();
         Log.d(TAG, "onConnectClick(): " + mCategory);
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "Refresh is started: " + mCategory);
+        loadData();
+    }
+
+    private void loadData() {
+        mNewsSourcesSwipeRefreshLayout.setRefreshing(true);
+        mErrorView.setVisibility(View.INVISIBLE);
+        getLoaderManager().restartLoader(NEWS_SOURCE_LOADER, null, NewsSourcesFragment.this);
     }
 }
