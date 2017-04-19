@@ -1,6 +1,7 @@
 package com.ermakov.newsapp.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +58,8 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Vi
         NewsSource newsSource = mNewsSources.get(position);
         holder.mNameTextView.setText(newsSource.getName());
         holder.mDescriptionTextView.setText(newsSource.getDescription());
-        Picasso.with(holder.itemView.getContext())
-                .load(newsSource.getUrlsToLogos().getSmall())
-                .into(holder.mLogoImageView);
+
+        //setSourceLogo(newsSource, holder);
     }
 
     @Override
@@ -67,11 +67,27 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Vi
         return (mNewsSources != null) ? mNewsSources.size() : 0;
     }
 
+    /**
+     * Установка Лого источника новостей.
+     * <br/><b>Deprecated: </b> NewsApi.org пометила Logo для источиков новостей, как устаревшие.
+     * @param newsSource источник новостей.
+     * @param holder объект ViewHolder, который необходимо обновить.
+     */
+    @Deprecated
+    private void setSourceLogo(NewsSource newsSource, ViewHolder holder) {
+        NewsSource.Logo newsSourceLogo = newsSource.getUrlsToLogos();
+        if (newsSourceLogo != null && !TextUtils.isEmpty(newsSourceLogo.getSmall())) {
+            //Picasso.with(holder.itemView.getContext())
+            //        .load(newsSourceLogo.getSmall())
+            //        .into(holder.mLogoImageView);
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.tv_name) TextView mNameTextView;
         @BindView(R.id.tv_description) TextView mDescriptionTextView;
-        @BindView(R.id.iv_logo) ImageView mLogoImageView;
+        //@BindView(R.id.iv_logo) ImageView mLogoImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);

@@ -137,17 +137,21 @@ public class NewsSource {
         mSortBysAvailable = sortBysAvailable;
     }
 
-    /**
-     * An object containing URLs to the source's logo.
-     */
+    @Deprecated
     public Logo getUrlsToLogos() {
         return mUrlsToLogos;
     }
 
+    @Deprecated
     public void setUrlsToLogos(Logo urlsToLogos) {
         mUrlsToLogos = urlsToLogos;
     }
 
+    /**
+     * Лого для источников новостей.
+     * <br/><b>Deprecated: </b> NewsApi.org пометила Logo для источиков новостей, как устаревшие.
+     */
+    @Deprecated
     public static class Logo {
 
         @SerializedName("small")

@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- NewsApi.org пометила Logo для источиков новостей, как устаревшие.
         <ImageView
             android:id="@+id/iv_logo"
             android:contentDescription="@string/logo_content_description"
@@ -19,6 +20,7 @@
             android:layout_height="@dimen/logo_news_source_size"
             android:layout_marginRight="@dimen/logo_news_source_right_margin"
             android:layout_marginEnd="@dimen/logo_news_source_right_margin"/>
+        -->
 
         <LinearLayout
             android:orientation="vertical"
